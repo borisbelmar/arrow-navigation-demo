@@ -1,68 +1,55 @@
-import './styles.css'
-import { initArrowNavigation } from '@arrow-navigation/core'
+import "./styles.css"
+import { initArrowNavigation } from "@arrow-navigation/core"
 
 const arrowNavigationApi = initArrowNavigation()
 
-const getCenterPoint = element => {
-  const rect = element.getBoundingClientRect()
-  return {
-    x: rect.left + rect.width / 2,
-    y: rect.top + rect.height / 2
-  }
-}
+const app = document.createElement('main')
+app.setAttribute('id', 'app')
+app.classList.add('flex', 'flex-row', 'w-screen', 'h-screen', 'bg-gray-800', 'relative', 'items-center', 'overflow-hidden')
+document.body.appendChild(app)
 
-const getInnerTextByPoint = (element, label) => {
-  const centerPoint = getCenterPoint(element)
-  return `${label} X:${Math.round(centerPoint.x)} Y:${Math.round(centerPoint.y)}`
-}
+const group0Container = document.createElement('container')
+app.appendChild(group0Container)
+group0Container.setAttribute('id', 'group-0')
+group0Container.classList.add('flex', 'flex-col', 'justify-center', 'items-center', 'h-full', 'p-4', 'bg-gray-600', 'gap-4')
+arrowNavigationApi.registerGroup(group0Container)
 
-const body = document.querySelector('body')
-body.classList.add('bg-gray-800', 'h-screen', 'flex', 'flex-col', 'justify-center', 'items-center')
-
-const createButton = text => {
+Array.from(Array(6).keys()).forEach(index => {
   const button = document.createElement('button')
-  button.classList.add(
-    'bg-teal-500',
-    'hover:bg-teal-700',
-    'text-white',
-    'font-bold',
-    'p-4',
-    'rounded',
-    'focus:outline-none',
-    'focus:shadow-outline',
-    'focus:ring-2',
-    'focus:ring-orange-600'
-  )
-  button.textContent = text
-  arrowNavigationApi.registerElement(button)
-  return button
-}
+  group0Container.appendChild(button)
+  button.setAttribute('id', `group-0-button-${index}`)
+  button.classList.add('bg-blue-500', 'text-white', 'w-16', 'h-16', 'rounded', 'focus:outline-none', 'flex', 'focus:bg-yellow-500', 'justify-center', 'items-center', 'text-2xl', 'font-bold')
+  button.innerText = index
+  arrowNavigationApi.registerElement(button, 'group-0')
+})
 
-const createGrid = (...classList) => {
-  const gridContainer = document.createElement('div')
-  gridContainer.classList.add('grid', 'grid-cols-3', 'gap-4', 'w-1/2', ...classList)
-  body.appendChild(gridContainer)
-  Array.from({ length: 9 }, (_, i) => {
-    const button = createButton(i + 1)
-    gridContainer.appendChild(button)
-    button.innerText = getInnerTextByPoint(button, i + 1)
-    return button
+// Other Groups container
+
+const rightSideContainer = document.createElement('container')
+app.appendChild(rightSideContainer)
+rightSideContainer.classList.add('space-y-6', 'ml-6')
+
+const generateRightGroup = (groupIdx, qty) => {
+  const groupId = `group-${groupIdx}`
+  const groupContainer = document.createElement('container')
+  rightSideContainer.appendChild(groupContainer)
+  groupContainer.setAttribute('id', groupId)
+  arrowNavigationApi.registerGroup(groupContainer)
+  groupContainer.classList.add('flex', 'flex-row', 'justify-start', 'items-center', 'p-4', 'bg-gray-500', 'gap-4')
+
+  Array.from(Array(qty).keys()).forEach(elementIndex => {
+    const button = document.createElement('button')
+    groupContainer.appendChild(button)
+    button.setAttribute('id', `group-${groupIdx}-button-${elementIndex}`)
+    button.classList.add('bg-blue-500', 'text-white', 'w-32', 'h-16', 'rounded', 'focus:outline-none', 'flex', 'focus:bg-yellow-500', 'justify-center', 'items-center', 'text-2xl', 'font-bold')
+    button.innerText = elementIndex
+    arrowNavigationApi.registerElement(button, groupId)
   })
 }
 
-Array.from({ length: 3 }, (_, idx) => {
-  createGrid('mb-8', 'relative', idx % 2 === 0 ? 'left-10' : undefined)
-})
-
-const absoluteButton = createButton('Absolute')
-absoluteButton.classList.add('absolute', 'bottom-4', 'right-4', 'm-8', 'bg-orange-500', 'focus:ring-green-500')
-
-body.appendChild(absoluteButton)
-absoluteButton.innerText = getInnerTextByPoint(absoluteButton, 'Absolute')
-
-const absoluteButton2 = createButton('Absolute')
-absoluteButton2.classList.add('absolute', 'top-4', 'left-2', 'm-8', 'bg-purple-500', 'focus:ring-red-500')
-
-body.appendChild(absoluteButton2)
-absoluteButton2.innerText = getInnerTextByPoint(absoluteButton2, 'Absolute')
-
+generateRightGroup(1, 5)
+generateRightGroup(2, 3)
+generateRightGroup(3, 4)
+generateRightGroup(4, 2)
+generateRightGroup(5, 1)
+generateRightGroup(6, 5)
