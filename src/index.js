@@ -29,7 +29,7 @@ const rightSideContainer = document.createElement('container')
 app.appendChild(rightSideContainer)
 rightSideContainer.classList.add('space-y-6', 'ml-6')
 
-const generateRightGroup = (groupIdx, qty) => {
+const generateRightGroup = (groupIdx, qty, disabled) => {
   const groupId = `group-${groupIdx}`
   const groupContainer = document.createElement('container')
   rightSideContainer.appendChild(groupContainer)
@@ -39,6 +39,9 @@ const generateRightGroup = (groupIdx, qty) => {
 
   Array.from(Array(qty).keys()).forEach(elementIndex => {
     const button = document.createElement('button')
+    if (disabled) {
+      button.setAttribute('disabled', true)
+    }
     groupContainer.appendChild(button)
     button.setAttribute('id', `group-${groupIdx}-button-${elementIndex}`)
     button.classList.add('bg-blue-500', 'text-white', 'w-32', 'h-16', 'rounded', 'focus:outline-none', 'flex', 'focus:bg-yellow-500', 'justify-center', 'items-center', 'text-2xl', 'font-bold', 'disabled:opacity-50')
@@ -50,7 +53,7 @@ const generateRightGroup = (groupIdx, qty) => {
 generateRightGroup(1, 5)
 generateRightGroup(2, 3)
 generateRightGroup(3, 4)
-generateRightGroup(4, 2)
+generateRightGroup(4, 2, true)
 generateRightGroup(5, 1)
 generateRightGroup(6, 5)
 
